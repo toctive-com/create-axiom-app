@@ -10,10 +10,26 @@ export const initCommand: CommandModule = {
       const stack = await select({
         message: 'Select your stack:',
         choices: [
-          { name: 'Next.js App Router', value: 'next-app-router' },
-          { name: 'Next.js Page Router', value: 'next-page-router' },
-          { name: 'TanStack Router', value: 'tanstack-router' },
-          { name: 'TanStack Start', value: 'tanstack-start' },
+          {
+            name: 'Next.js App Router',
+            value: 'next-app-router',
+            description: 'Modern Next.js with app directory and React Server Components',
+          },
+          {
+            name: 'Next.js Page Router',
+            value: 'next-page-router',
+            description: 'Traditional Next.js with pages directory',
+          },
+          {
+            name: 'TanStack Router',
+            value: 'tanstack-router',
+            description: 'Type-safe routing for React applications',
+          },
+          {
+            name: 'TanStack Start',
+            value: 'tanstack-start',
+            description: 'Full-stack React framework powered by TanStack Router',
+          },
         ],
       });
 
@@ -21,12 +37,36 @@ export const initCommand: CommandModule = {
       const authOptions = await checkbox({
         message: 'Select authentication options:',
         choices: [
-          { name: 'Email & Password', value: 'email-password' },
-          { name: 'Magic Link (Email)', value: 'magic-link' },
-          { name: 'Social Login - Google', value: 'social-google' },
-          { name: 'Social Login - GitHub', value: 'social-github' },
-          { name: 'Social Login - Twitter', value: 'social-twitter' },
-          { name: 'Social Login - Facebook', value: 'social-facebook' },
+          {
+            name: 'Email & Password',
+            value: 'email-password',
+            description: 'Traditional email and password authentication',
+          },
+          {
+            name: 'Magic Link (Email)',
+            value: 'magic-link',
+            description: 'Passwordless login via email links',
+          },
+          {
+            name: 'Social Login - Google',
+            value: 'social-google',
+            description: 'Sign in with Google account',
+          },
+          {
+            name: 'Social Login - GitHub',
+            value: 'social-github',
+            description: 'Sign in with GitHub account',
+          },
+          {
+            name: 'Social Login - Twitter',
+            value: 'social-twitter',
+            description: 'Sign in with Twitter/X account',
+          },
+          {
+            name: 'Social Login - Facebook',
+            value: 'social-facebook',
+            description: 'Sign in with Facebook account',
+          },
         ],
       });
 
