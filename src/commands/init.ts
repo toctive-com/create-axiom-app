@@ -5,6 +5,7 @@ import AdmZip from 'adm-zip';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import { execSync } from 'child_process';
 import { config } from '../config.js';
 
 export const initCommand: CommandModule = {
@@ -31,13 +32,19 @@ export const initCommand: CommandModule = {
       const targetDir = projectName === currentDirName ? process.cwd() : path.join(process.cwd(), projectName);
       const isCurrentDir = targetDir === process.cwd();
 
-      if (isCurrentDir) {
+      // Create the project directory if it doesn't exist
+      if (!isCurrentDir && !fs.existsSync(targetDir)) {
+        fs.mkdirSync(targetDir, { recursive: true });
+      }
+
+      // Check if target directory has content
+      if (fs.existsSync(targetDir)) {
         const files = fs.readdirSync(targetDir);
         // Filter out hidden files and check if directory has content
         const hasContent = files.filter(f => !f.startsWith('.')).length > 0;
 
         if (hasContent) {
-          console.log('\n⚠️  Warning: Current directory is not empty!');
+          console.log(`\n⚠️  Warning: ${isCurrentDir ? 'Current directory' : 'Directory'} is not empty!`);
           const shouldContinue = await confirm({
             message: 'Some files may be overwritten. Do you want to continue?',
             default: false,
@@ -47,11 +54,6 @@ export const initCommand: CommandModule = {
             console.log('\nOperation cancelled.');
             process.exit(0);
           }
-        }
-      } else {
-        // Create the project directory if it doesn't exist
-        if (!fs.existsSync(targetDir)) {
-          fs.mkdirSync(targetDir, { recursive: true });
         }
       }
 
@@ -78,6 +80,33 @@ export const initCommand: CommandModule = {
             name: 'TanStack Start',
             value: 'tanstack-start',
             description: 'Full-stack React framework powered by TanStack Router',
+          },
+        ],
+      });
+
+      // Prompt for package manager
+      const packageManager = await select({
+        message: 'Select package manager:',
+        choices: [
+          {
+            name: 'npm',
+            value: 'npm',
+            description: 'Node Package Manager (default)',
+          },
+          {
+            name: 'yarn',
+            value: 'yarn',
+            description: 'Yarn Package Manager',
+          },
+          {
+            name: 'pnpm',
+            value: 'pnpm',
+            description: 'Fast, disk space efficient package manager',
+          },
+          {
+            name: 'bun',
+            value: 'bun',
+            description: 'Ultra-fast all-in-one JavaScript runtime',
           },
         ],
       });
@@ -123,6 +152,7 @@ export const initCommand: CommandModule = {
       const choices = {
         projectName,
         stack,
+        packageManager,
         authentication: authOptions,
       };
 
@@ -161,6 +191,36 @@ export const initCommand: CommandModule = {
       if (!isCurrentDir) {
         console.log(`📁 Project created in: ${targetDir}`);
       }
+
+      // Ask if user wants to install packages
+      const shouldInstall = await confirm({
+        message: 'Would you like to install packages now?',
+        default: true,
+      });
+
+      if (shouldInstall) {
+        console.log(`\nInstalling packages with ${packageManager}...`);
+        try {
+          const installCommand = packageManager === 'npm' ? 'npm install' :
+                                packageManager === 'yarn' ? 'yarn install' :
+                                packageManager === 'pnpm' ? 'pnpm install' :
+                                'bun install';
+          
+          execSync(installCommand, {
+            cwd: targetDir,
+            stdio: 'inherit',
+          });
+          
+          console.log('\n✅ Packages installed successfully!');
+        } catch (error) {
+          console.error('\n❌ Failed to install packages. You can install them manually later.');
+        }
+      } else {
+        const cdCommand = !isCurrentDir ? `cd ${projectName} && ` : '';
+        console.log(`\n📦 You can install packages later by running: ${cdCommand}${packageManager} install`);
+      }
+
+      process.exit(0);
     } catch (error) {
       if (error instanceof Error && error.name === 'ExitPromptError') {
         console.log('\nOperation cancelled.');
