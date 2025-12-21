@@ -1,0 +1,35 @@
+{
+  "name": "create-axiom-app",
+  "module": "index.ts",
+  "type": "module",
+  "private": false,
+  "author": "Sameh A. Elalfi <sameh.elalfi.mail@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toctive-com/create-axiom-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/toctive-com/create-axiom-app/issues"
+  },
+  "homepage": "https://github.com/toctive-com/create-axiom-app#readme",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --import tsx --test",
+    "build": "bunx tsc --noEmit && tsup --config ./tsup.config.ts",
+    "lint": "tsup ./src",
+    "release": "standard-version && git push --follow-tags origin dev"
+  },
+  "dependencies": {
+    "standard-version": "^9.5.0",
+    "tsup": "^8.5.1"
+  }
+}
