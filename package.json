@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/toctive-com/create-axiom-app#readme",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/yargs": "^17.0.35"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -37,7 +38,9 @@
     "release": "bun run build && standard-version && git push --follow-tags origin dev"
   },
   "dependencies": {
+    "@inquirer/prompts": "^8.1.0",
     "standard-version": "^9.5.0",
-    "tsup": "^8.5.1"
+    "tsup": "^8.5.1",
+    "yargs": "^18.0.0"
   }
 }
