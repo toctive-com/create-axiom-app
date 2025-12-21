@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/toctive-com/create-axiom-app/compare/v0.1.6...v0.1.7) (2025-12-21)
+
+
+### Features
+
+* add bin entry for create-axiom-app in package.json ([4b9061c](https://github.com/toctive-com/create-axiom-app/commit/4b9061cad515e0555c1f5d65ef86f9cb5a5f458b))
+
 ### [0.1.6](https://github.com/toctive-com/create-axiom-app/compare/v0.1.5...v0.1.6) (2025-12-21)
 
 
