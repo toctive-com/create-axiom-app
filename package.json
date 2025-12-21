@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/toctive-com/create-axiom-app#readme",
   "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
     "@types/bun": "latest",
     "@types/yargs": "^17.0.35"
   },
@@ -39,6 +40,8 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^8.1.0",
+    "adm-zip": "^0.5.16",
+    "axios": "^1.13.2",
     "standard-version": "^9.5.0",
     "tsup": "^8.5.1",
     "yargs": "^18.0.0"
