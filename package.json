@@ -5,6 +5,9 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "create-axiom-app": "./dist/index.js" 
+  },
   "private": false,
   "author": "Sameh A. Elalfi <sameh.elalfi.mail@gmail.com>",
   "license": "MIT",
