@@ -2,6 +2,7 @@ import { select, checkbox, input, confirm } from '@inquirer/prompts';
 import type { CommandModule } from 'yargs';
 import axios from 'axios';
 import AdmZip from 'adm-zip';
+import * as tar from 'tar';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -170,22 +171,46 @@ export const initCommand: CommandModule = {
         }
       );
 
-      // Get the zip file as a buffer
+      // Get the file as a buffer
       const buffer = Buffer.from(response.data);
 
-      // Create a temporary file path for the zip
-      const tempZipPath = path.join(os.tmpdir(), `axiom-kit-${Date.now()}.zip`);
+      // Detect file type from Content-Type header or check content-disposition
+      const contentType = response.headers['content-type'] || '';
+      const contentDisposition = response.headers['content-disposition'] || '';
+      let isTarGz = false;
       
-      // Write the zip file to temp location
-      fs.writeFileSync(tempZipPath, buffer);
+      // Check if it's a tar.gz file
+      if (contentType.includes('gzip') || 
+          contentType.includes('x-gzip') || 
+          contentType.includes('tar') ||
+          contentDisposition.includes('.tar.gz') ||
+          contentDisposition.includes('.tgz')) {
+        isTarGz = true;
+      }
 
-      // Extract the zip file to target directory
+      // Create a temporary file path
+      const fileExtension = isTarGz ? '.tar.gz' : '.zip';
+      const tempFilePath = path.join(os.tmpdir(), `axiom-kit-${Date.now()}${fileExtension}`);
+      
+      // Write the file to temp location
+      fs.writeFileSync(tempFilePath, buffer);
+
+      // Extract the file to target directory
       console.log('Extracting files...');
-      const zip = new AdmZip(tempZipPath);
-      zip.extractAllTo(targetDir, true);
+      if (isTarGz) {
+        // Extract tar.gz file
+        await tar.x({
+          file: tempFilePath,
+          cwd: targetDir,
+        });
+      } else {
+        // Extract zip file
+        const zip = new AdmZip(tempFilePath);
+        zip.extractAllTo(targetDir, true);
+      }
 
-      // Clean up the temporary zip file
-      fs.unlinkSync(tempZipPath);
+      // Clean up the temporary file
+      fs.unlinkSync(tempFilePath);
 
       console.log('\n✅ Starter kit successfully downloaded and extracted!');
       if (!isCurrentDir) {
