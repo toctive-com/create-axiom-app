@@ -163,13 +163,45 @@ export const initCommand: CommandModule = {
 
       // Send POST request to backend
       console.log('\nDownloading starter kit...');
-      const response = await axios.post(
-        `${config.baseUrl}/api/download-kit`,
-        choices,
-        {
-          responseType: 'arraybuffer',
+      let response;
+      try {
+        response = await axios.post(
+          `${config.baseUrl}/api/download-kit`,
+          choices,
+          {
+            responseType: 'arraybuffer',
+          }
+        );
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('\n❌ Failed to download starter kit from backend');
+          
+          if (error.response) {
+            // Server responded with error status
+            console.error(`Status: ${error.response.status} ${error.response.statusText}`);
+            
+            // Try to parse error message from response
+            try {
+              const errorText = Buffer.from(error.response.data).toString('utf-8');
+              console.error(`Response: ${errorText}`);
+            } catch {
+              console.error('Response: Unable to parse error response');
+            }
+          } else if (error.request) {
+            // Request was made but no response received
+            console.error('Error: No response received from server');
+            console.error(`Is the backend running at ${config.baseUrl}?`);
+          } else {
+            // Error setting up the request
+            console.error(`Error: ${error.message}`);
+          }
+        } else {
+          console.error('\n❌ An unexpected error occurred:', error);
         }
-      );
+        process.exit(1);
+      }
+
+      console.log(`✅ Downloaded successfully (${response.status} ${response.statusText})`);
 
       // Get the file as a buffer
       const buffer = Buffer.from(response.data);
