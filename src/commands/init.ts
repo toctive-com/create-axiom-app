@@ -217,6 +217,41 @@ export const initCommand: CommandModule = {
         console.log(`📁 Project created in: ${targetDir}`);
       }
 
+      // Ask if user wants to initialize git repository
+      const gitDir = path.join(targetDir, '.git');
+      const gitExists = fs.existsSync(gitDir);
+      
+      if (!gitExists) {
+        const shouldInitGit = await confirm({
+          message: 'Would you like to initialize a git repository?',
+          default: true,
+        });
+
+        if (shouldInitGit) {
+          try {
+            console.log('\nInitializing git repository...');
+            execSync('git init', {
+              cwd: targetDir,
+              stdio: 'pipe',
+            });
+            
+            execSync('git add .', {
+              cwd: targetDir,
+              stdio: 'pipe',
+            });
+            
+            execSync('git commit -m "Initial commit"', {
+              cwd: targetDir,
+              stdio: 'pipe',
+            });
+            
+            console.log('✅ Git repository initialized with initial commit!');
+          } catch (error) {
+            console.error('\n❌ Failed to initialize git repository. You can initialize it manually later.');
+          }
+        }
+      }
+
       // Ask if user wants to install packages
       const shouldInstall = await confirm({
         message: 'Would you like to install packages now?',
