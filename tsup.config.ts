@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 import tsconfig from './tsconfig.json';
 
 export default defineConfig((options) => ({
-  name: 'olimi-engine',
+  name: 'create-axiom-app',
   entry: ['src/index.ts'],
   format: ['esm', 'cjs'],
   target: tsconfig.compilerOptions.target as 'esnext',
