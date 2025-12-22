@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/toctive-com/create-axiom-app/compare/v0.1.9...v0.1.10) (2025-12-22)
+
+
+### Features
+
+* support tar.gz file extraction in project initialization and update base URL to production ([813a9da](https://github.com/toctive-com/create-axiom-app/commit/813a9da3e9fefabb4bce3debc7e5aa933990bf22))
+
 ### [0.1.9](https://github.com/toctive-com/create-axiom-app/compare/v0.1.8...v0.1.9) (2025-12-21)
 
 
